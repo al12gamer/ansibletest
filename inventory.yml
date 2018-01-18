@@ -1,11 +1,34 @@
-# this is a test ansible playbook to collect inventory information
-# idea from https://github.com/bonvoxly/playbook/blob/master/stuffs/yml
+# this is a script for managing inventory and gathering all instances in a region
+# This was a borrowed and modified version of what is at https://github.com/bonovoxly/playbook/blob/master/stuffs.yml
+# again, this is a file that was copied and modified, originally from bonovoxly who used a BSD license
 - hosts: localhost
   connection: local
   gather_facts: yes
   vars_files:
-  	-  /etc/ansible/inventory.yml
+    - /etc/ansible/stuffs.yml
   roles:
-  	- role: virtualbox_facts
-	  filters:
-	  
+    - role: testenvironment.box_facts
+# this above line was originally titled aws.ec2_facts on the original playbook, changed because we won't be using aws
+      filters:
+        "tag:Environment": "{{ env }}"
+        instance-state-name: running
+    - role: localhost.testenvironment_ssh_keys
+# the original role was called localhost.aws_ssh_keys but that has also been modified, as this is not on aws
+    - role: ansible.groups_init
+
+- hosts: instances_private
+  become: yes
+  gather_facts: yes
+  user: ubuntu
+  vars_files:
+    - /etc/ansible/inventory.yml
+  roles:
+    - role: instance.get_inventory
+
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  vars_files:
+    - /etc/ansible/inventory.yml
+  roles:
+    - role: localhost.generate_hugo_and_upload

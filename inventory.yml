@@ -1,0 +1,11 @@
+# this is a test ansible playbook to collect inventory information
+# idea from https://github.com/bonvoxly/playbook/blob/master/stuffs/yml
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  vars_files:
+  	-  /etc/ansible/inventory.yml
+  roles:
+  	- role: virtualbox_facts
+	  filters:
+	  

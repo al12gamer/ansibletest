@@ -5,7 +5,7 @@
   connection: local
   gather_facts: yes
   vars_files:
-    - /etc/ansible/stuffs.yml
+    - /etc/ansible/inventory.yml
   roles:
     - role: testenvironment.box_facts
 # this above line was originally titled aws.ec2_facts on the original playbook, changed because we won't be using aws

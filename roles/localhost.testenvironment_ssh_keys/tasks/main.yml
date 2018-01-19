@@ -1,0 +1,44 @@
+#this yaml file basically gives instructions for doing the getting of ssh keys
+# needs many changes so that it can be made usable for local inventorying
+# original file from bonovoxly here https://github.com/bonovoxly/playbook/blob/master/roles/localhost.aws_ssh_keys/tasks/main.yml
+
+---
+# tasks file for localhost.aws_ssh_keys
+- name: Touch known_hosts file.
+  file:
+    path: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+    state: touch
+
+- name: Remove all old known_hosts entries.
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+    regexp: "^.* # {{ marker_vars|default(env) }}"
+    state: absent
+
+# Will need to change these for aws-to-local support
+# this might not even be needed if we end up using a local environment- may just learn how to bake a key into a kickstart file for joining things to Ansible
+- name: Add SSH public key to AWS System Log - this is BEST EFFORT.  May miss the SSH public key.
+  shell: aws ec2 get-console-output \
+           --region {{ vpc.region }} \
+           --instance-id {{ item.id }} \
+           --output text | sed -n 's/^.*\(ecdsa-sha2-nistp256 \)\(.*\)/\2/p' | tail -n 1 | awk '{print $1}' | awk '{print substr($0,1,140)}'
+  register: host_key_results
+  with_items: "{{ ec2_facts.instances }}"
+
+- name: Import SSH public keys - private IP addresses.
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+    line: "{{ item.0.private_dns_name }},{{ item.0.private_ip_address }} ecdsa-sha2-nistp256 {{ item.1.stdout }} # {{ marker_vars|default(env) }}"
+  when: item.0.state == 'running'
+  with_together:
+    - "{{ ec2_facts.instances }}"
+    - "{{ host_key_results.results }}"
+
+- name: Import SSH public keys - public IP addresses.
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.ssh/known_hosts"
+    line: "{{ item.0.public_dns_name}},{{ item.0.public_ip_address }} ecdsa-sha2-nistp256 {{ item.1.stdout }} # {{ marker_vars|default(env) }}"
+  when: item.0.state == 'running' and item.0.public_dns_name != ''
+  with_together:
+    - "{{ ec2_facts.instances }}"
+    - "{{ host_key_results.results }}"

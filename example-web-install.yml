@@ -1,32 +1,8 @@
----
-- name: Install nginx
-  hosts: nginx
-  become: true
+---  
+ - hosts: webservers 
+   become: true
+   become_user: ansible-user
 
-  tasks:
-  - name: Add epel-release repo
-    yum:
-      name: epel-release
-      state: present
-
-  - name: Install nginx
-    yum:
-      name: nginx
-      state: present
-    notify:
-     - start nginx
-     - enable nginx
-  - restart nginx
-
-  - name: Insert Index Page
-    template:
-      src: index.html
-      dest: /usr/share/nginx/html/index.html
-    notify:
-     - reload nginx
-
-  - name: Start NGiNX
-    service:
-      name: nginx
-      state: started
+   roles:
+     - { role: nginx, tags: ['nginx']}
 

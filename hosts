@@ -46,4 +46,8 @@
 ansible1 ansible_host=192.168.56.101
 ansible2 ansible_host=192.168.56.102
 ansible3 ansible_host=192.168.56.103
-nginx ansible_host=192.168.56.104
+[dev:children]
+webservers
+
+[webservers]
+192.168.56.104

@@ -21,3 +21,4 @@
         name: foo
         state: running
         uri: 'lxc:///'
+

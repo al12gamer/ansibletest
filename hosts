@@ -43,11 +43,7 @@
 #db-[99:101]-node.example.com
 
 [testboxes]
-ansible1 ansible_host=192.168.56.101
-ansible2 ansible_host=192.168.56.102
-ansible3 ansible_host=192.168.56.103
-[dev:children]
-webservers
+vagrant ansible_host=192.168.121.61/24
 
-[webservers]
-192.168.56.104
+[development]
+

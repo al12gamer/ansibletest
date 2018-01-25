@@ -1,0 +1,8 @@
+---
+- name: Create libvirt VM
+  hosts: all
+  roles:
+    - role: stackhpc.libvirt-vm
+      libvirt_vm_state: present
+      libvirt_vm_name: 'my-vm'
+

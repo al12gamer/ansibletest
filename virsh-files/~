@@ -1,0 +1,10 @@
+##this file was created using the template available at https://www.ibm.com/support/knowledgecenter/en/linuxonibm/liabp/liabpcreatestoragepool.htm
+##authentication is optional in a test environment, but we're just messing with it to get the iscsi volume running so
+##we can contact the mounted drive for the purpose of i
+<pool type="iscsi">
+	<name>storage_image</name>
+	<source>
+	  <host name="storage.localhost"/>
+	  <device path="/media/storage" />
+	  <auth type= none />
+

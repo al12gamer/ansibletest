@@ -10,8 +10,12 @@
   notify:
     - start nginx
     - enable nginx
-- restart nginx
+    - restart nginx
 
+- name: create directory
+  file:
+    path: /usr/share/nginx/html/
+    state: directory 
 - name: insert index page
   template:
     src: index.html

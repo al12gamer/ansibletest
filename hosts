@@ -41,9 +41,6 @@
 # leading 0s:
 
 #db-[99:101]-node.example.com
-
-[testboxes]
-vagrant ansible_host=192.168.121.61/24
-
-[development]
-
+[development] 
+centos7vm ansible_host=192.168.122.229 
+kubuntuvm ansible_host=192.168.122.154

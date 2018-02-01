@@ -1,0 +1,6 @@
+---
+- hosts: tangent
+  gather_facts: true
+  roles:
+    - air-install
+    - update-all

@@ -1,0 +1,5 @@
+---
+ - name: update-all in kubuntu
+ - hosts: tangent
+   command: "sudo update-grub -y"
+ - name:

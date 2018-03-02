@@ -1,0 +1,19 @@
+# the point of this file is to install all necessary things for the RFID readers connected to the tangents
+---
+ - name: add 32-bit architecture
+   command: dpkg --add-architecture i386
+
+ - name: install libusb itsself
+   apt:
+     name: libusb-1.0-0
+
+ - name: add libusb libraries proper
+   apt:
+     name: lib32stdc++6
+     update_cache: yes
+
+ - name: grab RFIdeas reader
+   command: wget https://www.rfideas.com/files/downloads/software/CmdpcProx.tar.gz
+
+ - name: extract RFIdeas reader
+   command: tar -xvf CmdpcProx.tar.gz 

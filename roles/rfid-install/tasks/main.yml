@@ -1,8 +1,12 @@
-# the point of this file is to install all necessary things for the RFID readers connected to the tangents
+# the point of this file is to install all necessary things for the RFID readers connected to the tangents and check for all that the next time this
+# role is ran
 ---
  - name: add 32-bit architecture
    command: dpkg --add-architecture i386
 
+ - name: check for libusb
+ - stat: 
+     path: /
  - name: install libusb itsself
    apt:
      name: libusb-1.0-0
@@ -12,8 +16,11 @@
      name: lib32stdc++6
      update_cache: yes
 
+# need to find a way to test if the RFID reader software is already there along with libusb before installing- installing overtop isn't the best option
  - name: grab RFIdeas reader
-   command: wget https://www.rfideas.com/files/downloads/software/CmdpcProx.tar.gz
-
+   get_url:
+     url: https://www.rfideas.com/files/downloads/software/CmdpcProx.tar.gz
+     dest: /home/teslauser/
+     mode: 744
  - name: extract RFIdeas reader
    command: tar -xvf CmdpcProx.tar.gz 
